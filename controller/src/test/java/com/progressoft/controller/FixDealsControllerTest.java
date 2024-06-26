@@ -46,9 +46,9 @@ class FixDealsControllerTest {
     public void testPatchFixDeals_ContainDuplicate() {
 
         List<UnsavedDeal> unsavedDeals = List.of(
-                new UnsavedDeal(inputFixDealDtoList.getFirst().getDealId(), "Deal is duplicated", UnSaveReason.DUPLICATE)
+                new UnsavedDeal(inputFixDealDtoList.get(0).getDealId(), "Deal is duplicated", UnSaveReason.DUPLICATE)
         );
-        inputFixDealDtoList.removeFirst();
+        inputFixDealDtoList.remove(0);
         FixDealsResponse expectedResponse = new FixDealsResponse("OK",
                 unsavedDeals, inputFixDealDtoList);
         when(fixDealsService.saveDeals(inputFixDealDtoList)).thenReturn(expectedResponse);
@@ -57,7 +57,7 @@ class FixDealsControllerTest {
                 fixDealsController.patchFixDeals(inputFixDealDtoList);
         List<UnsavedDeal> unSavedDeals = Objects.requireNonNull(responseEntity.getBody()).getUnSavedDeals();
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(unSavedDeals.getFirst().getUnSaveReason(), UnSaveReason.DUPLICATE);
+        assertEquals(unSavedDeals.get(0).getUnSaveReason(), UnSaveReason.DUPLICATE);
     }
 
 
