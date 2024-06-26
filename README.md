@@ -62,8 +62,7 @@ The project follows a modular structure using Maven, organized into several modu
 
 ## Configuration
 
-- **Database Configuration**: Check `docker-compose.yml` for database settings.
-- **Logging Configuration**: Log4j configuration can be found in `log4j2.xml`.
+- **Database Configuration**: Check [docker-compose.yml](docker-compose.yml) for database settings.
 - **Environment Variables**: Adjust settings like `SERVER_PORT`, `DATASOURCE_URL`, `DATASOURCE_USERNAME`, and `DATASOURCE_PASSWORD` in `docker-compose.yml` or directly in your environment.
 
 ## API Documentation
