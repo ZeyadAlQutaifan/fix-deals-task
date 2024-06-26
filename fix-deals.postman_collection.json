@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "a728b35f-0ad8-47ad-bf35-2900a58e52f7",
+		"name": "fix deals",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21805721"
+	},
+	"item": [
+		{
+			"name": "localhost:8081/public/api/save/deal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"dealId\" : \"3321332\" , \r\n        \"fromCurrencyIsoCode\" : \"JOD\" , \r\n        \"toCurrencyIsoCode\" : \"AED\" ,\r\n        \"dealAmount\" : 23\r\n    } ,\r\n    {\r\n        \"dealId\" : \"332\" , \r\n        \"fromCurrencyIsoCode\" : \"JOD\" , \r\n        \"toCurrencyIsoCode\" : \"USD\" ,\r\n        \"dealAmount\" : 30\r\n    },\r\n    {\r\n        \"dealId\" : \"3351\" , \r\n        \"fromCurrencyIsoCode\" : \"AED\" , \r\n        \"toCurrencyIsoCode\" : \"USD\" ,\r\n        \"dealAmount\" : 30\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/public/api/save/deal",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"public",
+						"api",
+						"save",
+						"deal"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
