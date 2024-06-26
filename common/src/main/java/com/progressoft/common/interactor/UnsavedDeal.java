@@ -9,5 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UnsavedDeal {
     private String recordId ;
-    private String reason ;
+    private String message ;
+    private UnSaveReason unSaveReason ;
 }

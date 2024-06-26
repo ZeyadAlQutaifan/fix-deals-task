@@ -5,6 +5,7 @@ import com.progressoft.common.dto.FixDealDto;
 import com.progressoft.common.exception.DuplicateFixDealException;
 import com.progressoft.common.exception.InvalidDealException;
 import com.progressoft.common.interactor.FixDealsResponse;
+import com.progressoft.common.interactor.UnSaveReason;
 import com.progressoft.common.interactor.UnsavedDeal;
 import com.progressoft.common.service.FixDealsService;
 import com.progressoft.validate.DealInputValidator;
@@ -31,13 +32,13 @@ public class FixDealsServiceImpl implements FixDealsService {
                 savedFixDeals.add(deal);
                 log.info("Deal successfully inserted: {}", deal.getDealId());
             } catch (InvalidDealException e) {
-                unSavedFixDeals.add(new UnsavedDeal(deal.getDealId() , e.getMessage()));
+                unSavedFixDeals.add(new UnsavedDeal(deal.getDealId(), e.getMessage(), UnSaveReason.INVALID));
                 log.error("Validation error for deal: {}", deal.getDealId(), e);
             } catch (DuplicateFixDealException e) {
-                unSavedFixDeals.add(new UnsavedDeal( deal.getDealId() , "Deal is duplicated"));
+                unSavedFixDeals.add(new UnsavedDeal(deal.getDealId(), "Deal is duplicated", UnSaveReason.DUPLICATE));
                 log.error("Deal {}} already exists", deal.getDealId(), e);
             } catch (Exception e) {
-                unSavedFixDeals.add(new UnsavedDeal(deal.getDealId() , "Unexpected exception occurs while process deal %s"));
+                unSavedFixDeals.add(new UnsavedDeal(deal.getDealId(), "Unexpected exception occurs while process deal %s", UnSaveReason.INTERNAL_ERROR));
                 log.error("Error inserting deal: {}", deal.getDealId(), e);
             }
         }

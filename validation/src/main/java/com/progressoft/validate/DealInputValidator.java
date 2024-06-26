@@ -2,7 +2,9 @@ package com.progressoft.validate;
 
 import com.progressoft.common.dto.FixDealDto;
 import com.progressoft.common.exception.InvalidDealException;
+
 import java.math.BigDecimal;
+
 import static com.progressoft.common.utils.CurrencyISOUtils.isValidCurrencyCode;
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -17,7 +19,7 @@ public class DealInputValidator {
     }
 
     private void validateDealId(String dealId) throws InvalidDealException {
-        if (isNull(dealId)) {
+        if (isBlank(dealId)) {
             throw new InvalidDealException("Deal Unique Id is missing.");
         }
     }
@@ -39,4 +41,6 @@ public class DealInputValidator {
             throw new InvalidDealException("Deal Amount must be greater than or equal to 0.1");
         }
     }
+
+
 }

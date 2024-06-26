@@ -2,35 +2,23 @@ package com.progressoft.controller;
 
 import com.progressoft.common.dto.FixDealDto;
 import com.progressoft.common.interactor.FixDealsResponse;
+import com.progressoft.common.interactor.UnSaveReason;
 import com.progressoft.common.interactor.UnsavedDeal;
 import com.progressoft.common.service.FixDealsService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,42 +45,36 @@ class FixDealsControllerTest {
     @Test
     public void testPatchFixDeals_ContainDuplicate() {
 
-        List<UnsavedDeal> unsavedDeals = Arrays.asList(
-                new UnsavedDeal(inputFixDealDtoList.getFirst().getDealId(), "Deal is duplicated")
+        List<UnsavedDeal> unsavedDeals = List.of(
+                new UnsavedDeal(inputFixDealDtoList.getFirst().getDealId(), "Deal is duplicated", UnSaveReason.DUPLICATE)
         );
-        inputFixDealDtoList.remove(0);
+        inputFixDealDtoList.removeFirst();
         FixDealsResponse expectedResponse = new FixDealsResponse("OK",
                 unsavedDeals, inputFixDealDtoList);
+        when(fixDealsService.saveDeals(inputFixDealDtoList)).thenReturn(expectedResponse);
+
         ResponseEntity<FixDealsResponse> responseEntity =
                 fixDealsController.patchFixDeals(inputFixDealDtoList);
-        List<UnsavedDeal> unSavedDeals = responseEntity.getBody().getUnSavedDeals();
+        List<UnsavedDeal> unSavedDeals = Objects.requireNonNull(responseEntity.getBody()).getUnSavedDeals();
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        assertEquals(1,savedDeals.getUnSavedDeals().size());
-
+        assertEquals(unSavedDeals.getFirst().getUnSaveReason(), UnSaveReason.DUPLICATE);
     }
 
 
     @Test
     public void testPatchFixDeals_AllSavedSuccess() {
-        // Mock data
 
         FixDealsResponse expectedResponse = new FixDealsResponse("Deals saved successfully",
                 Collections.emptyList(), inputFixDealDtoList);
 
-        // Mock service method with specific argument
         when(fixDealsService.saveDeals(inputFixDealDtoList)).thenReturn(expectedResponse);
 
-        // Call controller method
         ResponseEntity<FixDealsResponse> responseEntity =
                 fixDealsController.patchFixDeals(inputFixDealDtoList);
-        // Assertions
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody(), "Response body should not be null");
-        // Check savedDeals size and content
         List<FixDealDto> savedDeals = responseEntity.getBody().getSavedDeals();
         assertNotNull(savedDeals, "Saved deals should not be null");
         assertEquals(inputFixDealDtoList.size(), savedDeals.size(), "Number of saved deals should match input");
-        // Add more specific assertions as needed on savedDeals content
     }
 }
