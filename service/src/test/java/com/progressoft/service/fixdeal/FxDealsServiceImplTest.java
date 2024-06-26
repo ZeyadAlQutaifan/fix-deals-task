@@ -1,11 +1,11 @@
 package com.progressoft.service.fixdeal;
 
 
-import com.progressoft.common.dao.FixDealDAO;
-import com.progressoft.common.dto.FixDealDto;
-import com.progressoft.common.exception.DuplicateFixDealException;
+import com.progressoft.common.dao.FxDealDAO;
+import com.progressoft.common.dto.FXDealDto;
+import com.progressoft.common.exception.DuplicateFxDealException;
 import com.progressoft.common.exception.InvalidDealException;
-import com.progressoft.common.interactor.FixDealsResponse;
+import com.progressoft.common.interactor.FxDealsResponse;
 import com.progressoft.validate.DealInputValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,16 +22,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-public class FixDealsServiceImplTest {
+public class FxDealsServiceImplTest {
 
     @Mock
-    private FixDealDAO fixDealDAO;
+    private FxDealDAO fxDealDAO;
 
     @Mock
     private DealInputValidator dealInputValidator;
 
     @InjectMocks
-    private FixDealsServiceImpl fixDealsService;
+    private FxDealsServiceImpl fixDealsService;
 
     @BeforeEach
     public void setup() {
@@ -40,48 +40,48 @@ public class FixDealsServiceImplTest {
 
     @Test
     public void testSaveDeals_AllSuccess() {
-        List<FixDealDto> inputFixDealDtoList = Arrays.asList(
-                new FixDealDto("1", "USD", "EUR", new BigDecimal("100.00")),
-                new FixDealDto("2", "EUR", "USD", new BigDecimal("200.00"))
+        List<FXDealDto> inputFXDealDtoList = Arrays.asList(
+                new FXDealDto("1", "USD", "EUR", new BigDecimal("100.00")),
+                new FXDealDto("2", "EUR", "USD", new BigDecimal("200.00"))
         );
 
         doNothing().when(dealInputValidator).validateDeal(any());
 
-        doNothing().when(fixDealDAO).persist(any());
+        doNothing().when(fxDealDAO).persist(any());
 
-        FixDealsResponse response = fixDealsService.saveDeals(inputFixDealDtoList);
+        FxDealsResponse response = fixDealsService.saveDeals(inputFXDealDtoList);
 
         assertEquals("OK", response.getMessage());
         assertEquals(0, response.getUnSavedDeals().size());
-        assertEquals(inputFixDealDtoList.size(), response.getSavedDeals().size());
+        assertEquals(inputFXDealDtoList.size(), response.getSavedDeals().size());
     }
 
     @Test
     public void testSaveDeals_ContainDuplicate() {
-        List<FixDealDto> inputFixDealDtoList = Arrays.asList(
-                new FixDealDto("1", "USD", "EUR", new BigDecimal("100.00")),
-                new FixDealDto("2", "EUR", "USD", new BigDecimal("200.00"))
+        List<FXDealDto> inputFXDealDtoList = Arrays.asList(
+                new FXDealDto("1", "USD", "EUR", new BigDecimal("100.00")),
+                new FXDealDto("2", "EUR", "USD", new BigDecimal("200.00"))
         );
 
         doNothing().when(dealInputValidator).validateDeal(any());
 
-        doThrow(new DuplicateFixDealException("Deal already exists")).when(fixDealDAO).persist(any());
+        doThrow(new DuplicateFxDealException("Deal already exists")).when(fxDealDAO).persist(any());
 
-        FixDealsResponse response = fixDealsService.saveDeals(inputFixDealDtoList);
+        FxDealsResponse response = fixDealsService.saveDeals(inputFXDealDtoList);
 
         // Assertions
         assertEquals("OK", response.getMessage());
-        assertEquals(inputFixDealDtoList.size(), response.getUnSavedDeals().size());
+        assertEquals(inputFXDealDtoList.size(), response.getUnSavedDeals().size());
     }
 
     @Test
     public void testSaveDeals_InvalidInput() {
-        List<FixDealDto> inputFixDealDtoList = List.of(
-                new FixDealDto("1", null, "EUR", new BigDecimal("100.00")) // Invalid input: fromCurrencyIsoCode is null
+        List<FXDealDto> inputFXDealDtoList = List.of(
+                new FXDealDto("1", null, "EUR", new BigDecimal("100.00")) // Invalid input: fromCurrencyIsoCode is null
         );
 
         doThrow(new InvalidDealException("Invalid input: fromCurrencyIsoCode cannot be null")).when(dealInputValidator).validateDeal(any());
-        FixDealsResponse response = fixDealsService.saveDeals(inputFixDealDtoList);
+        FxDealsResponse response = fixDealsService.saveDeals(inputFXDealDtoList);
 
         // Assertions
         assertEquals("OK", response.getMessage());

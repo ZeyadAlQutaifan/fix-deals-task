@@ -1,10 +1,10 @@
 package com.progressoft.dao;
 
 
-import com.progressoft.common.dto.FixDealDto;
-import com.progressoft.common.exception.DuplicateFixDealException;
-import com.progressoft.entity.FixDealEntity;
-import com.progressoft.mapper.FixDealEntityMapper;
+import com.progressoft.common.dto.FXDealDto;
+import com.progressoft.common.exception.DuplicateFxDealException;
+import com.progressoft.entity.FXDealEntity;
+import com.progressoft.mapper.FXDealEntityMapper;
 import com.progressoft.repository.FixDealsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,10 +25,10 @@ public class FixDealDaoImplTest {
     private FixDealsRepository fixDealsRepository;
 
     @Mock
-    private FixDealEntityMapper fixDealEntityMapper;
+    private FXDealEntityMapper FXDealEntityMapper;
 
     @InjectMocks
-    private FixDealDaoImpl fixDealDao;
+    private FxDealDaoImpl fixDealDao;
 
     @BeforeEach
     public void setup() {
@@ -37,30 +37,30 @@ public class FixDealDaoImplTest {
 
     @Test
     public void testPersist_Success() {
-        FixDealDto fixDealDto = new FixDealDto("1", "USD", "EUR", new BigDecimal("100.00"));
-        FixDealEntity fixDealEntity = new FixDealEntity();
-        when(fixDealEntityMapper.toEntity(fixDealDto)).thenReturn(fixDealEntity);
+        FXDealDto FXDealDto = new FXDealDto("1", "USD", "EUR", new BigDecimal("100.00"));
+        FXDealEntity FXDealEntity = new FXDealEntity();
+        when(FXDealEntityMapper.toEntity(FXDealDto)).thenReturn(FXDealEntity);
 
-        doReturn(fixDealEntity).when(fixDealsRepository).save(any());
+        doReturn(FXDealEntity).when(fixDealsRepository).save(any());
 
-        fixDealDao.persist(fixDealDto);
+        fixDealDao.persist(FXDealDto);
 
-        verify(fixDealEntityMapper, times(1)).toEntity(fixDealDto);
-        verify(fixDealsRepository, times(1)).save(fixDealEntity);
+        verify(FXDealEntityMapper, times(1)).toEntity(FXDealDto);
+        verify(fixDealsRepository, times(1)).save(FXDealEntity);
     }
 
     @Test
     public void testPersist_DuplicateException() {
-        FixDealDto fixDealDto = new FixDealDto("1", "USD", "EUR", new BigDecimal("100.00"));
-        when(fixDealEntityMapper.toEntity(fixDealDto)).thenReturn(new FixDealEntity());
+        FXDealDto FXDealDto = new FXDealDto("1", "USD", "EUR", new BigDecimal("100.00"));
+        when(FXDealEntityMapper.toEntity(FXDealDto)).thenReturn(new FXDealEntity());
 
         doThrow(DataIntegrityViolationException.class).when(fixDealsRepository).save(any());
 
-        assertThrows(DuplicateFixDealException.class, () ->
-                fixDealDao.persist(fixDealDto)
+        assertThrows(DuplicateFxDealException.class, () ->
+                fixDealDao.persist(FXDealDto)
         );
 
-        verify(fixDealEntityMapper, times(1)).toEntity(fixDealDto);
+        verify(FXDealEntityMapper, times(1)).toEntity(FXDealDto);
         verify(fixDealsRepository, times(1)).save(any());
     }
 }

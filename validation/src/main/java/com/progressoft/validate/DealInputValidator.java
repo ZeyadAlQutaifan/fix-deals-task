@@ -1,6 +1,6 @@
 package com.progressoft.validate;
 
-import com.progressoft.common.dto.FixDealDto;
+import com.progressoft.common.dto.FXDealDto;
 import com.progressoft.common.exception.InvalidDealException;
 
 import java.math.BigDecimal;
@@ -11,7 +11,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class DealInputValidator {
 
-    public void validateDeal(FixDealDto deal) throws InvalidDealException {
+    public void validateDeal(FXDealDto deal) throws InvalidDealException {
         validateDealId(deal.getDealId());
         validateCurrencyCode(deal.getFromCurrencyIsoCode(), "From Currency ISO Code");
         validateCurrencyCode(deal.getToCurrencyIsoCode(), "To Currency ISO Code");

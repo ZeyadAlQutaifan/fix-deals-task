@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FixDealDto {
+public class FXDealDto {
     private String dealId ;
     private String fromCurrencyIsoCode;
     private String toCurrencyIsoCode;

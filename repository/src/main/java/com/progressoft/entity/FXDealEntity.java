@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "FIX_DEALS")
+@Table(name = "FX_DEALS")
 @Getter
 @Setter
-public class FixDealEntity {
+public class FXDealEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

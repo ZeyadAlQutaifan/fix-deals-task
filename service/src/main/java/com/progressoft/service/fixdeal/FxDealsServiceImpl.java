@@ -1,13 +1,13 @@
 package com.progressoft.service.fixdeal;
 
-import com.progressoft.common.dao.FixDealDAO;
-import com.progressoft.common.dto.FixDealDto;
-import com.progressoft.common.exception.DuplicateFixDealException;
+import com.progressoft.common.dao.FxDealDAO;
+import com.progressoft.common.dto.FXDealDto;
+import com.progressoft.common.exception.DuplicateFxDealException;
 import com.progressoft.common.exception.InvalidDealException;
-import com.progressoft.common.interactor.FixDealsResponse;
+import com.progressoft.common.interactor.FxDealsResponse;
 import com.progressoft.common.interactor.UnSaveReason;
 import com.progressoft.common.interactor.UnsavedDeal;
-import com.progressoft.common.service.FixDealsService;
+import com.progressoft.common.service.FxDealsService;
 import com.progressoft.validate.DealInputValidator;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,24 +17,24 @@ import java.util.List;
 
 @Log4j2
 @AllArgsConstructor
-public class FixDealsServiceImpl implements FixDealsService {
-    private final FixDealDAO fixDealDAO;
+public class FxDealsServiceImpl implements FxDealsService {
+    private final FxDealDAO fxDealDAO;
     private final DealInputValidator dealInputValidator;
 
     @Override
-    public FixDealsResponse saveDeals(List<FixDealDto> deals) {
+    public FxDealsResponse saveDeals(List<FXDealDto> deals) {
         List<UnsavedDeal> unSavedFixDeals = new ArrayList<>();
-        List<FixDealDto> savedFixDeals = new ArrayList<>();
-        for (FixDealDto deal : deals) {
+        List<FXDealDto> savedFixDeals = new ArrayList<>();
+        for (FXDealDto deal : deals) {
             try {
                 dealInputValidator.validateDeal(deal);
-                fixDealDAO.persist(deal);
+                fxDealDAO.persist(deal);
                 savedFixDeals.add(deal);
                 log.info("Deal successfully inserted: {}", deal.getDealId());
             } catch (InvalidDealException e) {
                 unSavedFixDeals.add(new UnsavedDeal(deal.getDealId(), e.getMessage(), UnSaveReason.INVALID));
                 log.error("Validation error for deal: {}", deal.getDealId(), e);
-            } catch (DuplicateFixDealException e) {
+            } catch (DuplicateFxDealException e) {
                 unSavedFixDeals.add(new UnsavedDeal(deal.getDealId(), "Deal is duplicated", UnSaveReason.DUPLICATE));
                 log.error("Deal {}} already exists", deal.getDealId(), e);
             } catch (Exception e) {
@@ -42,6 +42,6 @@ public class FixDealsServiceImpl implements FixDealsService {
                 log.error("Error inserting deal: {}", deal.getDealId(), e);
             }
         }
-        return new FixDealsResponse("OK", unSavedFixDeals, savedFixDeals);
+        return new FxDealsResponse("OK", unSavedFixDeals, savedFixDeals);
     }
 }
